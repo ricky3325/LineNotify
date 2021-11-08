@@ -1,0 +1,14 @@
+version: "3.0"
+services:
+
+    lineservice:
+      container_name: lineservice
+      build: LineService/
+      ports:
+      - "5000:5000"
+      restart: on-failure
+
+    accesstoken:
+      container_name: accesstoken
+      build: AccessToken/
+      restart: on-failure
