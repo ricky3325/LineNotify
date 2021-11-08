@@ -12,3 +12,8 @@ services:
       container_name: accesstoken
       build: AccessToken/
       restart: on-failure
+
+    sendnotify:
+      container_name: sendnotify
+      build: SendNotify/
+      restart: on-failure
