@@ -3,10 +3,22 @@ services:
 
     lineservice:
       container_name: lineservice
-      build: LineService/
+      build: LineService/ 
       ports:
-      - "5000:5000"
+        - "5000:5000"
+      networks:
+        internal_routes:
       restart: on-failure
+
+    rabbitmq_create_user:
+      image: rabbitmq 
+      ports:
+        - "5672:5672"
+      networks:
+        internal_routes:
+          aliases:
+            - rabbitmq
+
 
     accesstoken:
       container_name: accesstoken
@@ -17,3 +29,6 @@ services:
       container_name: sendnotify
       build: SendNotify/
       restart: on-failure
+
+networks:
+  internal_routes:
