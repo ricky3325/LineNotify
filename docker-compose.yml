@@ -1,34 +1,80 @@
 version: "3.0"
 services:
 
+    nginx:
+      container_name: nginx
+      build: nginx/
+      ports:
+        - "80:80"
+      restart: on-failure
+      networks:
+        internal_routes:    
+    
     lineservice:
       container_name: lineservice
       build: LineService/ 
-      ports:
-        - "5000:5000"
-      networks:
-        internal_routes:
-      restart: on-failure
-
-    rabbitmq_create_user:
-      image: rabbitmq 
-      ports:
-        - "5672:5672"
+      #ports:
+      # - "5000:5000"
       networks:
         internal_routes:
           aliases:
-            - rabbitmq
-
-
-    accesstoken:
-      container_name: accesstoken
-      build: AccessToken/
+            - lineservice
       restart: on-failure
-
+    
+      #    rabbitmq_create_user:
+      #image: rabbitmq 
+      #ports:
+      #  - "5672:5672"
+      #networks:
+      #  internal_routes:
+      #    aliases:
+      #      - rabbitmq
+    
+    
+      #accesstoken:
+      #container_name: accesstoken
+      #build: AccessToken/
+      #restart: on-failure
+    
     sendnotify:
       container_name: sendnotify
       build: SendNotify/
       restart: on-failure
+
+   
+    db:
+      image: mysql
+      container_name: db
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: my_secret_password
+        MYSQL_DATABASE: app_db
+        MYSQL_USER: db_user
+        MYSQL_PASSWORD: db_user_pass
+      ports:
+        - "6033:3306"
+      volumes:
+        - dbdata:/var/lib/mysql
+    
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: pma
+      depends_on:
+        - db
+      environment:
+        PMA_HOST: db
+        PMA_PORT: 3306
+        PMA_ARBITRARY: 1
+      restart: always
+      networks:
+        internal_routes:
+          aliases:
+            - phpmyadmin
+     # ports:
+     #  - 8081:80
+
+volumes:
+  dbdata:
 
 networks:
   internal_routes:
