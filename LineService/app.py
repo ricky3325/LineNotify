@@ -10,7 +10,10 @@ def index():
 def Do_editInfo():
     code = request.form["code"]
     state = request.form["state"]
-    
+    return code
+
+@app.route('/test', methods=['POST'])
+def Do_Test():    
     # push code
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq', port=5672))
     channel = connection.channel()
